@@ -9,7 +9,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Article;
-use AppBundle\Form\ArticleType;
+use AppBundle\Form\ProjectType;
+use AppBundle\Manager\ProjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,24 +18,28 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ArticleController extends Controller
+class ProjectController extends Controller
 {
     /**
-     * @Route("/articles", name="article_list")
+     * @Route("/projects", name="project_list")
+     * @param ProjectManager $projectManager
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction()
+    public function listAction(ProjectManager $projectManager)
     {
         $em = $this->getDoctrine()->getManager();
         $articles = $em->getRepository(Article::class)->findAll();
         if (!$articles) {
             $this->errorAction($articles);
         }
-        return $this->render('article/list.html.twig', ['articles' => $articles]);
+        return $this->render('project/list.html.twig', ['articles' => $articles]);
+
+        $projects= $projectManager->getProjects();
+        return $this->render('project/list.html.twig', ['projects' => $projects]);
     }
 
     /**
-     * @Route("/articles/{id}", name="article_view", requirements={"id"="\d+"})
+     * @Route("/projects/{id}", name="project_view", requirements={"id"="\d+"})
      * @param int $id
      * @return mixed
      */
@@ -45,12 +50,12 @@ class ArticleController extends Controller
         if (!$article) {
             $this->errorAction($article);
         }
-        $this->generateUrl('article_view', ['id' => $article->getId()]);
-        return $this->render('article/view.html.twig', ['article' => $article]);
+        $this->generateUrl('project_view', ['id' => $article->getId()]);
+        return $this->render('project/view.html.twig', ['article' => $article]);
     }
 
     /**
-     * @Route("/articles/add", name="article_add")
+     * @Route("/projects/add", name="project_add")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -58,7 +63,7 @@ class ArticleController extends Controller
     {
         $article = new Article();
 
-        $form = $this->createForm(ArticleType::class, $article);
+        $form = $this->createForm(ProjectType::class, $article);
         $form->handleRequest($request);
         if (!$form) {
             $this->errorAction($article);
@@ -70,14 +75,14 @@ class ArticleController extends Controller
             $em->persist($article);
             $em->flush();
 
-            return $this->redirectToRoute('article_list');
+            return $this->redirectToRoute('project_list');
 
         }
-        return $this->render('article/add.html.twig', ['form' => $form->createView()]);
+        return $this->render('project/add.html.twig', ['form' => $form->createView()]);
     }
 
     /**
-     * @Route("/articles/edit/{id}", name="article_edit")
+     * @Route("/projects/edit/{id}", name="project_edit")
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -89,7 +94,7 @@ class ArticleController extends Controller
         if (!$article) {
             $this->errorAction($article);
         }
-        $form = $this->createForm(ArticleType::class, $article);
+        $form = $this->createForm(ProjectType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -97,9 +102,9 @@ class ArticleController extends Controller
             $em->persist($article);
             $em->flush();
 
-            return $this->redirectToRoute('article_list');
+            return $this->redirectToRoute('project_list');
         }
-        return $this->render('article/add.html.twig', ['form' => $form->createView()]);
+        return $this->render('project/add.html.twig', ['form' => $form->createView()]);
     }
 
     /**
