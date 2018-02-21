@@ -1,0 +1,11 @@
+<html>
+<head>
+    <title> Liste des articles</title>
+</head>
+<body>
+<h1>Liste des article</h1>
+{% for article in articles %}
+    <p><a href="{{ path('article_view', {'id' : article.id}) }}">{{ article.name }}</a></p>
+{% endfor %}
+</body>
+</html>
