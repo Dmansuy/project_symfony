@@ -22,8 +22,19 @@ class ProjectManager
         $this->em = $entityManager;
     }
 
-    public function getProjects()
+    public function getArticles()
     {
         return $this->em->getRepository(Article::class)->findAll();
     }
+
+    public function getArticle(int $id)
+    {
+        return $this->em->getRepository(Article::class)->find($id);
+    }
+
+    /*public function createArticle()
+    {
+        $article = new Article();
+        return $this->em->createForm(ProjectType::class, $article);
+    }*/
 }

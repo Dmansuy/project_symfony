@@ -27,31 +27,27 @@ class ProjectController extends Controller
      */
     public function listAction(ProjectManager $projectManager)
     {
-        $em = $this->getDoctrine()->getManager();
-        $articles = $em->getRepository(Article::class)->findAll();
-        if (!$articles) {
-            $this->errorAction($articles);
+        $projects= $projectManager->getArticles();
+        if (!$projects) {
+            $this->errorAction($projects);
         }
-        return $this->render('project/list.html.twig', ['articles' => $articles]);
-
-        $projects= $projectManager->getProjects();
         return $this->render('project/list.html.twig', ['projects' => $projects]);
     }
 
     /**
      * @Route("/projects/{id}", name="project_view", requirements={"id"="\d+"})
+     * @param ProjectManager $projectManager
      * @param int $id
      * @return mixed
      */
-    public function viewAction(int $id)
+    public function viewAction(ProjectManager $projectManager, int $id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $article = $em->getRepository(Article::class)->find($id);
-        if (!$article) {
-            $this->errorAction($article);
+        $project= $projectManager->getArticle($id);
+        if (!$project) {
+            $this->errorAction($project);
         }
-        $this->generateUrl('project_view', ['id' => $article->getId()]);
-        return $this->render('project/view.html.twig', ['article' => $article]);
+        $this->generateUrl('project_view', ['id' => $project->getId()]);
+        return $this->render('project/view.html.twig', ['article' => $project]);
     }
 
     /**
@@ -62,21 +58,17 @@ class ProjectController extends Controller
     public function addAction(Request $request)
     {
         $article = new Article();
-
         $form = $this->createForm(ProjectType::class, $article);
         $form->handleRequest($request);
         if (!$form) {
             $this->errorAction($article);
         }
-
         if ($form->isSubmitted() && $form->isValid()) {
             $article = $form->getData();
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
-
             return $this->redirectToRoute('project_list');
-
         }
         return $this->render('project/add.html.twig', ['form' => $form->createView()]);
     }

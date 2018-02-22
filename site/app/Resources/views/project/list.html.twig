@@ -4,8 +4,8 @@
 </head>
 <body>
 <h1>Liste des article</h1>
-{% for article in articles %}
-    <p><a href="{{ path('project_view', {'id' : article.id}) }}">{{ article.name }}</a></p>
+{% for project in projects %}
+    <p><a href="{{ path('project_view', {'id' : project.id}) }}">{{ project.name }}</a></p>
 {% endfor %}
 </body>
 </html>
