@@ -19,6 +19,9 @@ security:
     main:
       provider: user
       anonymous: ~
+      logout:
+        path: logout
+        target: login
       form_login:
         login_path: login
         check_path: login
