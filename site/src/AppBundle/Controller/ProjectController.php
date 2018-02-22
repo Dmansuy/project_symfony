@@ -73,29 +73,6 @@ class ProjectController extends Controller
         }
         return $this->render('project/add.html.twig', ['form' => $form->createView()]);
     }
-
-    /**
-     * @Route("/projects/subscribe", name="project_subscribe")
-     * @param Request $request
-     * @param ProjectManager $projectManager
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function addUserAction(Request $request, ProjectManager $projectManager)
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-        if (!$form) {
-            $this->errorAction($user);
-        }
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager();
-            $projectManager->createUser($form->getData());
-            return $this->redirectToRoute('project_list');
-        }
-        return $this->render('project/subscribe.html.twig', ['form' => $form->createView()]);
-    }
-
     /**
      * @Route("/projects/edit/{id}", name="project_edit")
      * @param Request $request

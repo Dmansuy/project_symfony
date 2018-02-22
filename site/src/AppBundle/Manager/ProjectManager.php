@@ -10,7 +10,9 @@ namespace AppBundle\Manager;
 
 
 use AppBundle\Entity\Article;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ProjectManager
 {
@@ -37,12 +39,5 @@ class ProjectManager
         $this->em->persist($article);
         $this->em->flush();
         return $article;
-    }
-
-    public function createUser($user)
-    {
-        $this->em->persist($user);
-        $this->em->flush();
-        return $user;
     }
 }
