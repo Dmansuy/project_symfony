@@ -32,9 +32,17 @@ class ProjectManager
         return $this->em->getRepository(Article::class)->find($id);
     }
 
-    /*public function createArticle()
+    public function createArticle($article)
     {
-        $article = new Article();
-        return $this->em->createForm(ProjectType::class, $article);
-    }*/
+        $this->em->persist($article);
+        $this->em->flush();
+        return $article;
+    }
+
+    public function createUser($user)
+    {
+        $this->em->persist($user);
+        $this->em->flush();
+        return $user;
+    }
 }
